@@ -1,5 +1,6 @@
 use byteorder::{ReadBytesExt, WriteBytesExt, BigEndian};
 use std::cmp;
+use std::convert::TryInto;
 use std::io::{self, Read, Write};
 use std::net::{SocketAddr, ToSocketAddrs, SocketAddrV4, SocketAddrV6, TcpStream, Ipv4Addr,
                Ipv6Addr, UdpSocket};
@@ -142,9 +143,10 @@ impl Socks5Stream {
 
     fn connect_raw<T, U>(command: u8, proxy: T, target: U, auth: &Authentication) -> io::Result<Socks5Stream>
         where T: ToSocketAddrs,
-              U: ToTargetAddr
+              U: ToTargetAddr,
     {
-        let mut socket = TcpStream::connect(proxy)?;
+        //let mut socket = TcpStream::connect(proxy)?;
+        let mut socket = TcpStream::connect_timeout(&proxy.to_socket_addrs().unwrap().next().unwrap(), std::time::Duration::from_secs(5))?;
 
         let target = target.to_target_addr()?;
 
