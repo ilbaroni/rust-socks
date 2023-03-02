@@ -146,7 +146,7 @@ impl Socks5Stream {
               U: ToTargetAddr,
     {
         //let mut socket = TcpStream::connect(proxy)?;
-        let mut socket = TcpStream::connect_timeout(&proxy.to_socket_addrs().unwrap().next().unwrap(), std::time::Duration::from_secs(5))?;
+        let mut socket = TcpStream::connect_timeout(&proxy.to_socket_addrs().unwrap().next().unwrap(), std::time::Duration::from_secs(2))?;
 
         let target = target.to_target_addr()?;
 
